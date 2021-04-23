@@ -1,1 +1,0 @@
-# zerojudge source code
