@@ -24,8 +24,6 @@ signed main(){valder
             for(int c=1;c+a<w[0];++c){
                 for(int d=1;d+b<w[1]&&c+d<h[1];++d){
                     int e=h[0]-a-b, f=h[1]-c-d, i=w[1]-b-d, j=w[0]-a-c;
-                    //if(e<=0 || f<=0 || i<=0|| j<=0 || w[2]-e-f!=h[2]-i-j ) break;
-                    //cout<<a<<' '<<b<<' '<<c<<' '<<d<<endl;
                     if(e>0 && f>0 && i>0 && j>0 && w[2]-e-f==h[2]-i-j && w[2]-e-f>0) ++cnt;
                 }
             }
