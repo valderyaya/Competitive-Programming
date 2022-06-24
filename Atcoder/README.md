@@ -14,3 +14,4 @@
 | Atcoder ABC 250 | 2022/6/21|Virtual|4/8|86:18|A|B|C|D||
 | Atcoder ABC 249 | 2022/6/22|Virtual|4/8|62:19|A|B|C|D||**F**|
 | Atcoder ABC 248 | 2022/6/23|Virtual|3/8|62:40|A|B|**C**|D|**E**|
+| Atcoder ABC 247 | 2022/6/24|Virtual|4/8|23:06|A|B|C|D|
