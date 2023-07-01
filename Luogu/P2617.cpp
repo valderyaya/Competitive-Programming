@@ -1,64 +1,69 @@
 #include<bits/stdc++.h>
-//#include<bits/extc++.h>
-//using namespace __gnu_pbds;
 using namespace std;
-#define REP(i,n) for(int i=0;i<(n);i++)
-#define REP1(i,a,b) for(int i=(a);i<=(b);i++)
-#define pii pair<int,int>
-typedef long long ll;
-#define mkp make_pair
-#define em emplace_back
-#define F first
-#define S second
-#define ALL(x) (x).begin(),(x).end()
-#define Rosario ios::sync_with_stdio(0),cin.tie(0),cout.tie(0);
-#define pll pair<ll,ll>
-#define lb(x) (x&-x)
-#define wait system("pause");
+#define lb(x) x&-x
 
-int n,m,b[100005],ans[100005],a[100005];
-void add(int x,int v){for(;x<=n;x+=lb(x)) b[x]+=v;}
-int que(int x){
-    int res=0;
-    for(;x;x-=lb(x)) res+=b[x];
-    return res;
-}//1 que
-struct qq{int x,y,k,ty,id;}q[300005],q1[300005],q2[300005];
-void solve(int l,int r,int ql,int qr){
-    if(ql>qr) return;
-    if(l==r){
-        REP1(i,ql,qr) if(q[i].ty) ans[q[i].id]=l;
-        return;
-    }int mid=l+r>>1,cnt=ql-1,cnt1=0,cnt2=0;
-    REP1(i,ql,qr){
-        if(q[i].ty){
-            int r=que(q[i].y)-que(q[i].x-1);
-            if(q[i].k<=r) q1[++cnt1]=q[i];
-            else q[i].k-=r,q2[++cnt2]=q[i];
-        }else {
-            if(q[i].y<=mid) add(q[i].x,q[i].k),q1[++cnt1]=q[i];
-            else q2[++cnt2]=q[i];
+const int maxn=100001;
+int n, m, ls[maxn*400], rs[maxn*400], sum[maxn*400], a[maxn], b[maxn << 1], root[maxn], cnt, len;
+vector<int> ql, qr;
+struct query{
+    int op, x, y, z;
+}q[maxn];
+void mdf(int l, int r, int x, int &o, int val){
+    if(!o) o = ++cnt;
+    sum[o] += val;
+    if(l == r) return;
+    int mid = l + r >> 1;
+    if(x <= mid) mdf(l, mid, x, ls[o], val);
+    else mdf(mid+1, r, x, rs[o], val);
+}
+void mdf_all(int x, int val){
+    int idx = lower_bound(b+1, b+1+len, a[x]) - b;
+    for(;x <= n; x += lb(x)) mdf(1, len, idx, root[x], val);
+}
+int qry(int l, int r, int k){
+    if(l == r) return l;
+    int mid = l + r >> 1, S = 0;
+    for(auto &i:ql) S -= sum[ls[i]];
+    for(auto &i:qr) S += sum[ls[i]]; 
+    if(k <= S){
+        for(int i=0,j=ql.size();i<j;++i) ql[i] = ls[ql[i]];
+        for(int i=0,j=qr.size();i<j;++i) qr[i] = ls[qr[i]];
+        return qry(l, mid, k);
+    }else{
+        for(int i=0,j=ql.size();i<j;++i) ql[i] = rs[ql[i]];
+        for(int i=0,j=qr.size();i<j;++i) qr[i] = rs[qr[i]];
+        return qry(mid+1, r, k - S);
+    }
+}
+int qry_all(int l, int r, int k){
+    ql.clear(), qr.clear();
+    for(; r; r -= lb(r)) qr.emplace_back(root[r]);
+    for(--l; l; l -= lb(l)) ql.emplace_back(root[l]);
+    return qry(1, len, k);
+}
+int main(){
+    ios::sync_with_stdio(0),cin.tie(0),cout.tie(0);
+    cin >> n >> m;
+    for(int i = 1; i <= n; ++i) 
+        cin>>a[i], b[++len]=a[i];
+    for(int i = 1; i <= m; ++i){
+        char c; cin>>c;
+        q[i].op = c=='Q';
+        if(c == 'Q') cin >> q[i].x >> q[i].y >> q[i].z;
+        else cin >> q[i].x >> q[i].y, b[++len]=q[i].y;
+    }
+    sort(b + 1, b + 1 + len);
+    len = unique(b + 1, b + 1 + len) - b - 1;
+    for(int i = 1; i <= n; ++i) mdf_all(i, 1);
+    for(int i = 1; i <= m; ++i){
+        if(q[i].op) cout << b[qry_all(q[i].x, q[i].y, q[i].z)] << "\n";
+        else{
+            mdf_all(q[i].x, -1);
+            a[q[i].x] = q[i].y;
+            mdf_all(q[i].x, 1);
         }
     }
-    REP1(i,1,cnt1){
-        if(!q1[i].ty) add(q1[i].x,-q1[i].k);
-        q[++cnt]=q1[i];
-    }
-    REP1(i,1,cnt2) q[++cnt]=q2[i];
-    solve(l,mid,ql,ql+cnt1-1);solve(mid+1,r,ql+cnt1,qr);
-}
-int main(){Rosario
-    cin>>n>>m;
-    char c;
-    int cnt=0,len=0,x,y,k;
-    REP1(i,1,n) cin>>a[i],q[++len]=qq{i,a[i],1,0};
-    REP(i,m){
-        cin>>c;
-        if(c=='Q') cin>>x>>y>>k,q[++len]=qq{x,y,k,1,++cnt};
-        else cin>>x>>y,q[++len]=qq{x,a[x],-1,0},q[++len]=qq{x,a[x]=y,1,0};
-    }
-    solve(1,1e9,1,len);
-    REP1(i,1,cnt) cout<<ans[i]<<'\n';
-//    wait
     return 0;
 }
+
+
