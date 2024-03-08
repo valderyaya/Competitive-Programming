@@ -1,0 +1,27 @@
+//#pragma GCC optimize("unroll-loops, no-stack-protector, Ofast")
+#include<bits/stdc++.h>
+using namespace std;
+#define StarBurstStream ios::sync_with_stdio(0),cin.tie(0),cout.tie(0);
+#define ll long long
+#define F first
+#define S second
+#define ALL(x) x.begin(),x.end()
+#define pii pair<int,int>
+#define REP(i,n) for(int i=0;i<n;++i)
+#define REP1(i,a,b) for(int i=a;i<=b;++i)
+#define em emplace_back
+#define lb(x) x&-x
+#define pll pair<ll,ll>
+#define mkp make_pair
+
+ll dp[401][401],a[401],n;
+signed main(){StarBurstStream
+    cin>>n;
+    REP1(i,1,n){
+        cin>>a[i]; a[i]+=a[i-1];
+        REP1(j,1,n) if(i!=j) dp[i][j]=1e18;
+    } 
+    REP1(i,1,n) for(int j=i-1;j>=1;--j)
+        REP1(k,j,i-1) dp[j][i]=min(dp[j][i],dp[j][k]+dp[k+1][i]+a[i]-a[j-1]);
+    cout<<dp[1][n]<<"\n";
+}
