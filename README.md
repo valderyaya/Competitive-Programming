@@ -2,11 +2,9 @@
 
 A list of the competitive programming problems I have solved (not all have been uploaded).
 
-----
-
 記錄一下自己寫過的題目 (未全部上傳)
 
-----
+### Online Judge : 
 
 [Atcoder](https://atcoder.jp/)
 
