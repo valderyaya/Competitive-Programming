@@ -1,6 +1,6 @@
 # Competitive Programming
 
-记录一下自己写过的题目 (未全部上传)
+A list of the competitive programming problems I have solved (not all have been uploaded).
 
 ----
 
